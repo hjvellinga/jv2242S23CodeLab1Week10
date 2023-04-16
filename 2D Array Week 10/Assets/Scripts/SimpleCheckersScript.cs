@@ -21,8 +21,7 @@ public class SimpleCheckersScript : MonoBehaviour
     public GameObject blackPiecePrefab;
 
     public bool redTurn = true;
-
-    public List<GameObject> movementMarkers = new List<GameObject>();
+    
     public GameObject choiceMarker;
     private GameObject chosenPiece;
 
@@ -132,19 +131,19 @@ public class SimpleCheckersScript : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //reload the current scene
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) //when left clicked pressed
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero); //shoot ray
             if (hit.collider.CompareTag("Piece")) //if ray hits object with object tag
             {
-                chosenPiece = hit.collider.gameObject;
-                CheckSpace(chosenPiece);
+                chosenPiece = hit.collider.gameObject; //object hit will become chosen piece
+                CheckSpace(chosenPiece); //will call check space function with chosen piece
                 Debug.Log("Hit Piece");
             }
 
-            if (hit.collider.CompareTag("Marker"))
+            if (hit.collider.CompareTag("Marker")) //if ray hits object with marker tag
             {
-                Move(chosenPiece, hit.collider.gameObject);
+                Move(chosenPiece, hit.collider.gameObject); //call move function with chosen piece and the marker that was hit
                 Debug.Log("Hit marker");
             }
         }
@@ -200,11 +199,12 @@ public class SimpleCheckersScript : MonoBehaviour
                 }
             }
         }
-
+        //changes text to show red's turn
         if (redTurn)
         {
             displayText.text = "Red's Turn";
         }
+        //changes text to show black's turn
         else if (!redTurn)
         {
             displayText.text = "Black's Turn";
@@ -212,10 +212,11 @@ public class SimpleCheckersScript : MonoBehaviour
                  
     }
 
-    public void CheckSpace(GameObject piece)
+    public void CheckSpace(GameObject piece) 
     {
-        int x = (int)chosenPiece.transform.position.x;
-        int y = (int)chosenPiece.transform.position.y;
+        DestroyAllMarkers("Marker"); //calls function with tag marker
+        int x = (int)piece.transform.position.x;
+        int y = (int)piece.transform.position.y;
         
         if (redTurn && SpaceRed(x,y))
         {
@@ -223,14 +224,11 @@ public class SimpleCheckersScript : MonoBehaviour
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3( x + 1,  y+ 1);
-                movementMarkers.Add(marker);
-
             } 
             if (SpaceEmpty(x + 1, y - 1) && y > gridHeight - 9)
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x + 1, y - 1);
-                movementMarkers.Add(marker);
             }
             
 
@@ -238,15 +236,13 @@ public class SimpleCheckersScript : MonoBehaviour
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x + 2, y + 2);
-                movementMarkers.Add(marker);
-                
+
             }
             if (SpaceBlack(x + 1, y - 1) && SpaceEmpty(x +2, y - 2))
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x + 2, y - 2);
-                movementMarkers.Add(marker);
-                
+
             }
         }
         
@@ -256,28 +252,23 @@ public class SimpleCheckersScript : MonoBehaviour
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x - 1, y + 1);
-                movementMarkers.Add(marker);
             }
-            if (SpaceEmpty(x - 1, y - 1) && y > gridHeight + 9)
+            if (SpaceEmpty(x - 1, y - 1) && y > gridHeight - 9)
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x - 1, y - 1);
-                movementMarkers.Add(marker);
             }
             
             if (SpaceRed(x - 1, y + 1) && SpaceEmpty(x - 2, y + 2))
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x - 2, y + 2);
-                movementMarkers.Add(marker);
-                
+
             }
             if (SpaceRed(x - 1, y - 1) && SpaceEmpty(x - 2, y - 2))
             {
                 var marker = Instantiate(choiceMarker);
                 marker.transform.position = new Vector3(x - 2, y - 2);
-                movementMarkers.Add(marker);
-                
             }
         }
       
@@ -285,25 +276,37 @@ public class SimpleCheckersScript : MonoBehaviour
 
     public void Move(GameObject piece, GameObject marker)
     {
-        //SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y) = true (It made me declare another variable.
-        bool spaceEmpty = SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y);
-        spaceEmpty = true;
-        piece.transform.position = marker.transform.position;
-        bool spaceChange;
+        //SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y) = true (It made me declare another variable.)
+        
+        bool spaceEmpty = SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y); //creates bool out of Space empty function with the position of the piece chosen
+        spaceEmpty = true; //sets bool to true, turning the space empty
+        piece.transform.position = marker.transform.position; //sets position of chosen piece to the position of the chosen marker
+        bool spaceChange; //creates spaceChange bool
+        DestroyAllMarkers("Marker"); //calls function with tag marker
         if (redTurn)
         {
-            spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y);
-            spaceChange = true;
-            redTurn = !redTurn;
+            spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y); //space change bool will equal red space function with position of piece if red's turn
+            spaceChange = true; //will set bool to true
+            redTurn = !redTurn; //will change the player turns
         }
         else if (!redTurn)
         {
-            spaceChange = SpaceBlack((int)piece.transform.position.x, (int)piece.transform.position.y);
-            spaceChange = true;
+            spaceChange = SpaceBlack((int)piece.transform.position.x, (int)piece.transform.position.y); //space change bool will equal black space function
+            spaceChange = true; 
             redTurn = !redTurn;
         }
        
-        UpdateDisplay();
+        UpdateDisplay(); //will call update display
+    }
+
+    void DestroyAllMarkers(string tag) 
+    {
+        GameObject[] markers = GameObject.FindGameObjectsWithTag(tag); //makes an array with gameobjects that have the tag marker
+
+        for (int i = 0; i < markers.Length; i++) //cycles through array
+        {
+            Destroy(markers[i]); //deletes all markers in array
+        }
     }
 }
     
