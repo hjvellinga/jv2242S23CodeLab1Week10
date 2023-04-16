@@ -24,6 +24,8 @@ public class SimpleCheckersScript : MonoBehaviour
 
     public GameObject choiceMarker;
     private GameObject chosenPiece;
+
+    public TextMeshProUGUI displayText;
     void Start()
     //let's instantiate and initialize the grid
     {
@@ -36,6 +38,7 @@ public class SimpleCheckersScript : MonoBehaviour
                 grid[x, y] = 0; //the grid is empty
             }
         }
+        UpdateDisplay();
     }
 
     // Update is called once per frame
@@ -98,6 +101,15 @@ public class SimpleCheckersScript : MonoBehaviour
 
                 }
             }
+        }
+
+        if (redTurn)
+        {
+            displayText.text = "Red's Turn";
+        }
+        else if (!redTurn)
+        {
+            displayText.text = "Black's Turn";
         }
                  
     }
@@ -212,11 +224,13 @@ public class SimpleCheckersScript : MonoBehaviour
         {
             spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y);
             spaceChange = true;
+            redTurn = !redTurn;
         }
         else if (!redTurn)
         {
             spaceChange = SpaceBlack((int)piece.transform.position.x, (int)piece.transform.position.y);
             spaceChange = true;
+            redTurn = !redTurn;
         }
         UpdateDisplay();
     }
