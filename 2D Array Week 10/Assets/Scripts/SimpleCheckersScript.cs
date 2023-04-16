@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro; 
 using UnityEngine.UI; 
 using UnityEngine.SceneManagement;
+using static System.Numerics.Vector2;
 
 public class SimpleCheckersScript : MonoBehaviour
 {
@@ -14,9 +16,17 @@ public class SimpleCheckersScript : MonoBehaviour
     public int[,] grid; //on the grid we define empty spaces (0), spaces occupied by a red piece (1) and spaces occupied by a black piece (2); 
     // Start is called before the first frame update
     public List<GameObject> spawnedPieces = new List<GameObject>(); //here we keep track of the instantiated gameObjects throughout play, use list because it changes each turn
-
+    
     public GameObject redPiecePrefab;
-    public GameObject blackPiecePrefab; 
+    public GameObject blackPiecePrefab;
+
+    public bool redTurn = true;
+
+    public List<GameObject> movementMarkers = new List<GameObject>();
+    public GameObject choiceMarker;
+    private GameObject chosenPiece;
+
+    public TextMeshProUGUI displayText;
     void Start()
     //let's instantiate and initialize the grid
     {
@@ -29,6 +39,87 @@ public class SimpleCheckersScript : MonoBehaviour
                 grid[x, y] = 0; //the grid is empty
             }
         }
+        #region Column0
+        grid[0, 0] = 0; 
+        grid[0, 1] = 1; 
+        grid[0, 2] = 0;
+        grid[0, 3] = 1;
+        grid[0, 4] = 0;
+        grid[0, 5] = 1;
+        grid[0, 6] = 0;
+        grid[0, 7] = 1;
+        #endregion
+        #region Column1
+        grid[1, 0] = 1;
+        grid[1, 1] = 0;
+        grid[1, 2] = 1;
+        grid[1, 3] = 0;
+        grid[1, 4] = 1;
+        grid[1, 5] = 0;
+        grid[1, 6] = 1;
+        grid[1, 7] = 0;
+        #endregion
+        #region Column2
+        grid[2, 0] = 0;
+        grid[2, 1] = 1;
+        grid[2, 2] = 0;
+        grid[2, 3] = 1;
+        grid[2, 4] = 0;
+        grid[2, 5] = 1;
+        grid[2, 6] = 0;
+        grid[2, 7] = 1;
+        #endregion
+        #region Column3
+        grid[3, 0] = 0;
+        grid[3, 1] = 0;
+        grid[3, 2] = 0;
+        grid[3, 3] = 0;
+        grid[3, 4] = 0;
+        grid[3, 5] = 0;
+        grid[3, 6] = 0;
+        grid[3, 7] = 0;
+        #endregion
+        #region Column4
+        grid[4, 0] = 0;
+        grid[4, 1] = 0;
+        grid[4, 2] = 0;
+        grid[4, 3] = 0;
+        grid[4, 4] = 0;
+        grid[4, 5] = 0;
+        grid[4, 6] = 0;
+        grid[4, 7] = 0;
+        #endregion
+        #region Column5
+        grid[5, 0] = 2;
+        grid[5, 1] = 0;
+        grid[5, 2] = 2;
+        grid[5, 3] = 0;
+        grid[5, 4] = 2;
+        grid[5, 5] = 0;
+        grid[5, 6] = 2;
+        grid[5, 7] = 0;
+        #endregion
+        #region Column6
+        grid[6, 0] = 0;
+        grid[6, 1] = 2;
+        grid[6, 2] = 0;
+        grid[6, 3] = 2;
+        grid[6, 4] = 0;
+        grid[6, 5] = 2;
+        grid[6, 6] = 0;
+        grid[6, 7] = 2;
+        #endregion
+        #region Column7
+        grid[7, 0] = 2;
+        grid[7, 1] = 0;
+        grid[7, 2] = 2;
+        grid[7, 3] = 0;
+        grid[7, 4] = 2;
+        grid[7, 5] = 0;
+        grid[7, 6] = 2;
+        grid[7, 7] = 0;
+        #endregion
+        UpdateDisplay();
     }
 
     // Update is called once per frame
@@ -40,7 +131,24 @@ public class SimpleCheckersScript : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //reload the current scene
         }
-        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero); //shoot ray
+            if (hit.collider.CompareTag("Piece")) //if ray hits object with object tag
+            {
+                chosenPiece = hit.collider.gameObject;
+                CheckSpace(chosenPiece);
+                Debug.Log("Hit Piece");
+            }
+
+            if (hit.collider.CompareTag("Marker"))
+            {
+                Move(chosenPiece, hit.collider.gameObject);
+                Debug.Log("Hit marker");
+            }
+        }
+
     }
     
     // three functions for defining the values of EMPTY, RED and BLACK occupied spaces on the grid 
@@ -92,7 +200,110 @@ public class SimpleCheckersScript : MonoBehaviour
                 }
             }
         }
+
+        if (redTurn)
+        {
+            displayText.text = "Red's Turn";
+        }
+        else if (!redTurn)
+        {
+            displayText.text = "Black's Turn";
+        }
                  
+    }
+
+    public void CheckSpace(GameObject piece)
+    {
+        int x = (int)chosenPiece.transform.position.x;
+        int y = (int)chosenPiece.transform.position.y;
+        
+        if (redTurn && SpaceRed(x,y))
+        {
+            if (SpaceEmpty(x + 1, y + 1) && y < gridHeight - 1)
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3( x + 1,  y+ 1);
+                movementMarkers.Add(marker);
+
+            } 
+            if (SpaceEmpty(x + 1, y - 1) && y > gridHeight - 9)
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x + 1, y - 1);
+                movementMarkers.Add(marker);
+            }
+            
+
+            if (SpaceBlack(x + 1, y + 1) && SpaceEmpty(x +2, y + 2))
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x + 2, y + 2);
+                movementMarkers.Add(marker);
+                
+            }
+            if (SpaceBlack(x + 1, y - 1) && SpaceEmpty(x +2, y - 2))
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x + 2, y - 2);
+                movementMarkers.Add(marker);
+                
+            }
+        }
+        
+        if (!redTurn && SpaceBlack(x,y))
+        {
+            if (SpaceEmpty(x - 1, y + 1) && y < gridHeight - 1)
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x - 1, y + 1);
+                movementMarkers.Add(marker);
+            }
+            if (SpaceEmpty(x - 1, y - 1) && y > gridHeight + 9)
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x - 1, y - 1);
+                movementMarkers.Add(marker);
+            }
+            
+            if (SpaceRed(x - 1, y + 1) && SpaceEmpty(x - 2, y + 2))
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x - 2, y + 2);
+                movementMarkers.Add(marker);
+                
+            }
+            if (SpaceRed(x - 1, y - 1) && SpaceEmpty(x - 2, y - 2))
+            {
+                var marker = Instantiate(choiceMarker);
+                marker.transform.position = new Vector3(x - 2, y - 2);
+                movementMarkers.Add(marker);
+                
+            }
+        }
+      
+    }
+
+    public void Move(GameObject piece, GameObject marker)
+    {
+        //SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y) = true (It made me declare another variable.
+        bool spaceEmpty = SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y);
+        spaceEmpty = true;
+        piece.transform.position = marker.transform.position;
+        bool spaceChange;
+        if (redTurn)
+        {
+            spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y);
+            spaceChange = true;
+            redTurn = !redTurn;
+        }
+        else if (!redTurn)
+        {
+            spaceChange = SpaceBlack((int)piece.transform.position.x, (int)piece.transform.position.y);
+            spaceChange = true;
+            redTurn = !redTurn;
+        }
+       
+        UpdateDisplay();
     }
 }
     
