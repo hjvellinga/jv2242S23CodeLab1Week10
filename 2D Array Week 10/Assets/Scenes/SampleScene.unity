@@ -200,8 +200,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60270391}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.05, y: -0.03, z: 0}
-  m_LocalScale: {x: 1.6743, y: 1.6743, z: 1.6743}
+  m_LocalPosition: {x: 3.5, y: 3.5, z: 0}
+  m_LocalScale: {x: 1.338, y: 1.338, z: 1.338}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 3.5, y: 3.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -307,7 +307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &558677281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,6 +325,9 @@ MonoBehaviour:
   spawnedPieces: []
   redPiecePrefab: {fileID: 4103741856272379754, guid: 471e05fd677c3e94bb8effd9b778d599, type: 3}
   blackPiecePrefab: {fileID: 8660587872530708205, guid: c8c3ad726966cef4c994b518f8c0d48d, type: 3}
+  redTurn: 1
+  choiceMarker: {fileID: 5921439952957986230, guid: b9d2d8bce402cae4eb0faaa4db6ab696, type: 3}
+  displayText: {fileID: 0}
 --- !u!4 &558677282
 Transform:
   m_ObjectHideFlags: 0
@@ -339,4 +342,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1001013033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1001013035}
+  - component: {fileID: 1001013034}
+  m_Layer: 0
+  m_Name: YasScriptHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1001013034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001013033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1d2c256ee24344b89e3689a96cdbeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 8
+  gridHeight: 8
+  spawnedPieces: []
+  redPiecePrefab: {fileID: 0}
+  blackPiecePrefab: {fileID: 0}
+  redTurn: 1
+  choiceMarker: {fileID: 0}
+  displayText: {fileID: 0}
+--- !u!4 &1001013035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001013033}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

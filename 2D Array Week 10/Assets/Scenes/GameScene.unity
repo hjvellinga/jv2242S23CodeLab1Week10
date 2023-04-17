@@ -359,6 +359,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1075197124}
   m_CullTransparentMesh: 1
+--- !u!1 &1191649504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1191649506}
+  - component: {fileID: 1191649505}
+  m_Layer: 0
+  m_Name: GameManagerTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1191649505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191649504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1d2c256ee24344b89e3689a96cdbeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 8
+  gridHeight: 8
+  spawnedPieces: []
+  redPiecePrefab: {fileID: 4103741856272379754, guid: 471e05fd677c3e94bb8effd9b778d599, type: 3}
+  blackPiecePrefab: {fileID: 8660587872530708205, guid: c8c3ad726966cef4c994b518f8c0d48d, type: 3}
+  redTurn: 1
+  choiceMarker: {fileID: 5921439952957986230, guid: b9d2d8bce402cae4eb0faaa4db6ab696, type: 3}
+  displayText: {fileID: 1075197126}
+--- !u!4 &1191649506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191649504}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1276315962
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,7 +663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2103196437
 MonoBehaviour:
   m_ObjectHideFlags: 0

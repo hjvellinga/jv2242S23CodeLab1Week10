@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using static System.Numerics.Vector2;
 
-public class SimpleCheckersScript : MonoBehaviour
+public class YasSimpleCheckersScript1 : MonoBehaviour
 {
     public int gridWidth = 8;
 
@@ -140,7 +140,7 @@ public class SimpleCheckersScript : MonoBehaviour
                 chosenPiece = hit.collider.gameObject; //object hit will become chosen piece
                 CheckSpace(chosenPiece); //will call check space function with chosen piece
                 Debug.Log("Hit Piece");
-                Debug.Log("chosen piece: " + chosenPiece.transform.position);
+                Debug.Log("chosen pieceOriginal: " + chosenPiece.transform.position);
             }
 
             if (hit.collider.CompareTag("Marker")) //if ray hits object with marker tag
@@ -160,12 +160,14 @@ public class SimpleCheckersScript : MonoBehaviour
 
     public bool SpaceRed(int x, int y) //RED space == 1; 
     {
-        return grid[x, y] == 1; 
+        return grid[x, y] == 1;
+        Debug.Log("return value " + (grid[x,y] == 1 ) + (x, y));
+
     }
 
     public bool SpaceBlack(int x, int y) //BLACK space ==2; 
     {
-        return grid[x, y] == 2; 
+        return grid[x, y] == 2;
     }
 
     public void UpdateDisplay() //after each turn the grid[] must be updated with the new x,y values
@@ -280,29 +282,83 @@ public class SimpleCheckersScript : MonoBehaviour
     {
         //SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y) = true (It made me declare another variable.)
         
-        bool spaceEmpty = SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y); //creates bool out of Space empty function with the position of the piece chosen
-        spaceEmpty = true; //sets bool to true, turning the space empty
+        //int x = (int)marker.transform.position.x;
+        //int y = (int)marker.transform.position.y;
+
+        /*bool spaceEmpty = SpaceEmpty((int)marker.transform.position.x, (int)marker.transform.position.y);
+        //bool spaceEmpty = SpaceEmpty((int)piece.transform.position.x, (int)piece.transform.position.y); //creates bool out of Space empty function with the position of the piece chosen
+        //spaceEmpty = true; //sets bool to true, turning the space empty
+        Debug.Log("Space Empty: " + spaceEmpty);
         piece.transform.position = marker.transform.position; //sets position of chosen piece to the position of the chosen marker
-        Debug.Log("piece: " + piece.transform.position);
+        //chosenPiece.transform.Translate(x - (int)chosenPiece.transform.position.x, y - (int)chosenPiece.transform.position.y, 0);
+        Debug.Log("Chosen piece new: " + piece.transform.position);
         Debug.Log("marker: " + marker.transform.position);
         bool spaceChange; //creates spaceChange bool
         DestroyAllMarkers("Marker"); //calls function with tag marker
         if (redTurn)
         {
-            spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y); //space change bool will equal red space function with position of piece if red's turn
-            spaceChange = true; //will set bool to true
+            spaceChange = SpaceRed((int)marker.transform.position.x, (int)marker.transform.position.y);
+            //spaceChange = SpaceRed((int)piece.transform.position.x, (int)piece.transform.position.y); //space change bool will equal red space function with position of piece if red's turn
+            Debug.Log("space change: " + spaceChange);
+            //spaceChange = true; //will set bool to true
             redTurn = !redTurn; //will change the player turns
         }
         else if (!redTurn)
         {
             spaceChange = SpaceBlack((int)piece.transform.position.x, (int)piece.transform.position.y); //space change bool will equal black space function
-            spaceChange = true; 
+            //Debug.Log("Space Black: "+ SpaceBlack(1, 1));
+            //spaceChange = true; 
             redTurn = !redTurn;
+        }*/
+
+        //x and y coordinates of the marker where the player wants to move their piece
+        int x = (int)marker.transform.position.x;
+        int y = (int)marker.transform.position.y;
+
+        /*check if the player is jumping a piece by seeing if the absolute value of the difference
+        between the x position of the marker AND piece is equal to 2, if it is, the player is jumping a piece*/
+        if (Mathf.Abs(x - piece.transform.position.x) == 2) // if we're jumping a piece
+        {
+            //get the middle x and middleY coordinates of the space being jumped over
+            //the average of the x and y positions of the piece and marker.
+            int middleX = (int)((x + piece.transform.position.x) / 2f);
+            int middleY = (int)((y + piece.transform.position.y) / 2f);
+            
+            //check if there is a piece on this space by checking if the value in the grid at this position is not equal to 0. 
+            //0 means empty
+            //if its not zero that means there is a piece there, so destroy it and make it empty again
+            if (grid[middleX, middleY] != 0) // if the space being jumped has a piece on it
+            {
+                grid[middleX, middleY] = 0; // make the space being jumped EMPTY again
+                Destroy(GetPieceAt(middleX, middleY)); // destroy the piece being jumped
+                Debug.Log("Jumped over a piece");
+            }
         }
-       
-        UpdateDisplay(); //will call update display
+
+        grid[x, y] = grid[(int)piece.transform.position.x, (int)piece.transform.position.y]; // put the piece in the new spot
+        grid[(int)piece.transform.position.x, (int)piece.transform.position.y] = 0; // make the old spot EMPTY
+
+        piece.transform.position = marker.transform.position; // move the piece to the new spot
+        DestroyAllMarkers("Marker");
+        redTurn = !redTurn;
+
+        UpdateDisplay(); // will call UpdateDisplay
+        
+        
     }
 
+    public GameObject GetPieceAt(int x, int y)
+    {
+        foreach (var piece in spawnedPieces)
+        {
+            if ((int)piece.transform.position.x == x && (int)piece.transform.position.y == y)
+            {
+                return piece;
+            }
+        }
+        return null;
+    }
+    
     void DestroyAllMarkers(string tag) 
     {
         GameObject[] markers = GameObject.FindGameObjectsWithTag(tag); //makes an array with gameobjects that have the tag marker
