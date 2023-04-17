@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using static System.Numerics.Vector2;
 
-public class YasSimpleCheckersScript1 : MonoBehaviour
+public class SimpleCheckersScript1 : MonoBehaviour
 {
     public int gridWidth = 8;
 
